@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今日、焼きそば始めました。〜硬式野球部島編〜</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 12px 12px 100px 12px;
+      background-color: #ffe6ed;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.3rem;
+      margin: 10px 0 16px 0;
+      color: #d63384;
+      line-height: 1.4;
+    }
+    h1 .sub-title {
+      display: block;
+      font-size: 0.95rem;
+      color: #c2185b;
+      margin-top: 4px;
+    }
+
+    .past-order-card {
+      background: #ffffff;
+      border: 2px solid #d63384;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 10px rgba(214, 51, 132, 0.15);
+    }
+    .last-order-header {
+      font-weight: bold;
+      color: #d63384;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      border-bottom: 2px solid #f8d7da;
+      padding-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-clear-last {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .name-card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+      border: 1px solid #f8d7da;
+    }
+    .name-label {
+      font-weight: bold;
+      font-size: 0.95rem;
+      display: block;
+      margin-bottom: 6px;
+      color: #212529;
+    }
+    .name-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      outline: none;
+      background-color: #fff;
+    }
+    .name-input:focus {
+      border-color: #d63384;
+    }
+    .warning-note {
+      font-size: 0.8rem;
+      color: #dc3545;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+    .delivery-time-note {
+      font-size: 0.85rem;
+      color: #d63384;
+      font-weight: bold;
+      margin: 6px 0 2px 0;
+    }
+    .category-title {
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 20px 0 10px 0;
+      padding: 6px 12px;
+      background: #f8d7da;
+      border-left: 5px solid #d63384;
+      border-radius: 4px;
+      color: #842029;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+    }
+    .card-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item-name {
+      font-weight: bold;
+      font-size: 0.95rem;
+      color: #212529;
+    }
+    .item-price {
+      color: #6c757d;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    button.btn-step {
+      width: 42px;
+      height: 42px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background-color: #e83e8c;
+      color: white;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    button.btn-step:active {
+      background-color: #c2185b;
+    }
+    button.btn-minus {
+      background-color: #6c757d;
+    }
+    button.btn-minus:active {
+      background-color: #545b62;
+    }
+    .count {
+      font-size: 1.25rem;
+      font-weight: bold;
+      width: 28px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .drink-select-container {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed #f8d7da;
+    }
+    .drink-select-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 0.85rem;
+    }
+    .drink-select {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #ced4da;
+      font-size: 0.85rem;
+      background-color: #fff;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 500px;
+      margin: 0 auto;
+      background: #212529;
+      color: white;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -3px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+    }
+    .total-text {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-reset {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-reset:active {
+      background: #bd2130;
+    }
+    .btn-submit {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-submit:active {
+      background: #218838;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .customer-display {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #495057;
+      margin-bottom: 10px;
+      border-bottom: 2px dashed #ccc;
+      padding-bottom: 10px;
+      text-align: left;
+    }
+    .summary-list {
+      text-align: left;
+      background: #fff0f3;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-size: 0.9rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+    }
+    .modal-btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .btn-cancel {
+      flex: 1;
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-confirm {
+      flex: 1.5;
+      background: #d63384;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>
+    今日、焼きそば始めました。
+    <span class="sub-title">〜硬式野球部島編〜</span>
+  </h1>
+
+  <div id="past-orders-title" class="category-title" style="display: none; background: #d63384; color: white;">【以前の注文】</div>
+  <div id="past-orders-container"></div>
+
+  <div class="name-card">
+    <label class="name-label" for="customer-name">注文者名（お名前）<span style="color:red;">*</span></label>
+    <input type="text" id="customer-name" class="name-input" placeholder="例：山田 太郎">
+    <div class="warning-note">※ふざけた名前はお届けにいきません</div>
+  </div>
+
+  <div class="category-title">【単品】</div>
+  <div id="single-list"></div>
+
+  <div class="category-title">【セットA】</div>
+  <div id="setA-list"></div>
+
+  <div class="category-title">【セットB】</div>
+  <div id="setB-list"></div>
+
+  <div class="bottom-bar">
+    <div class="total-text">合計: ¥<span id="total">0</span></div>
+    <div class="btn-group">
+      <button class="btn-reset" onclick="resetAll()">リセット</button>
+      <button class="btn-submit" onclick="showConfirmation()">注文確定</button>
+    </div>
+  </div>
+
+  <div id="confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2 style="margin: 0; font-size: 1.2rem; color: #d63384;">注文内容の確認</h2>
+      <div class="delivery-time-note">注文完了から1〜5分以内にお届けに参ります。</div>
+      <p style="font-size: 0.85rem; color: #6c757d; margin: 4px 0 0 0;">内容に間違いはありませんか？</p>
+      
+      <div class="customer-display" style="margin-top: 12px;">
+        <div id="confirm-customer-name">注文者: </div>
+      </div>
+      
+      <div class="summary-list" id="confirm-summary"></div>
+      
+      <div style="font-size: 1.2rem; font-weight: bold; text-align: right;">
+        合計: ¥<span id="confirm-total">0</span>
+      </div>
+
+      <div class="modal-btn-group">
+        <button class="btn-cancel" onclick="closeConfirmModal()">修正する</button>
+        <button class="btn-confirm" onclick="finalSubmit()">この内容で確定</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="order-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2 style="margin: 0; font-size: 1.2rem; color: #28a745;">ご注文ありがとうございます！</h2>
+      <div class="delivery-time-note" style="margin-bottom: 12px;">注文完了から1〜5分以内にお届けに参ります。</div>
+      
+      <div class="customer-display">
+        <div id="modal-customer-name">注文者: </div>
+      </div>
+      
+      <div class="summary-list" id="modal-summary"></div>
+      
+      <div style="font-size: 1.2rem; font-weight: bold; text-align: right;">
+        合計: ¥<span id="modal-total">0</span>
+      </div>
+
+      <button class="btn-submit" style="width:100%; margin-top:20px; padding: 12px; background-color: #d63384;" onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1545243828888281108/gxrBfSewYAThnL7lEmbtvqF4aoKxlt-hgXecY1EW9vJhPnDxthtgkCHY2QbO6wSogVoZ';
+
+    const menuData = {
+      single: [
+        { id: 's1', name: '焼きそば', price: 400 },
+        { id: 's2', name: 'フランクフルト', price: 250 },
+        { id: 's3', name: '飲み物', price: 120 },
+        { id: 's4', name: 'ホットドック', price: 300 },
+        { id: 's5', name: '焼きそばパン', price: 400 }
+      ],
+      setA: [
+        { id: 'a1', name: '焼きそば ＋ 飲み物', price: 500 },
+        { id: 'a2', name: '焼きそばパン ＋ 飲み物', price: 500 },
+        { id: 'a3', name: 'フランクフルト ＋ 飲み物', price: 350 },
+        { id: 'a4', name: 'ホットドック ＋ 飲み物', price: 400 }
+      ],
+      setB: [
+        { id: 'b1', name: '焼きそば ＋ フランクフルト ＋ 飲み物', price: 700 },
+        { id: 'b2', name: '焼きそばパン ＋ フランクフルト ＋ 飲み物', price: 700 },
+        { id: 'b3', name: '焼きそばパン ＋ ホットドック ＋ 飲み物', price: 750 },
+        { id: 'b4', name: '焼きそば ＋ ホットドック ＋ 飲み物', price: 750 }
+      ]
+    };
+
+    const drinkOptions = ['水', 'ファンタオレンジ', '無糖アイスティー', 'コーラ', 'きりっと果実', 'カルピス'];
+
+    const counts = {};
+    let currentOrderData = null;
+
+    function init() {
+      renderCategory('single-list', menuData.single);
+      renderCategory('setA-list', menuData.setA);
+      renderCategory('setB-list', menuData.setB);
+    }
+
+    function renderCategory(elementId, items) {
+      const container = document.getElementById(elementId);
+      items.forEach(item => {
+        counts[item.id] = 0;
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        const hasDrink = item.name.includes('飲み物');
+
+        card.innerHTML = `
+          <div class="card-main">
+            <div>
+              <div class="item-name">${item.name}</div>
+              <div class="item-price">¥${item.price.toLocaleString()}</div>
+            </div>
+            <div class="controls">
+              <button class="btn-step btn-minus" onclick="changeCount('${item.id}', -1)">-</button>
+              <span id="${item.id}-count" class="count">0</span>
+              <button class="btn-step" onclick="changeCount('${item.id}', 1)">+</button>
+            </div>
+          </div>
+          ${hasDrink ? `<div id="${item.id}-drink-container" class="drink-select-container" style="display:none;"></div>` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function findItemById(id) {
+      const allItems = [...menuData.single, ...menuData.setA, ...menuData.setB];
+      return allItems.find(i => i.id === id);
+    }
+
+    function changeCount(id, delta) {
+      if (counts[id] + delta < 0) return;
+      counts[id] += delta;
+      document.getElementById(`${id}-count`).textContent = counts[id];
+      
+      const item = findItemById(id);
+      if (item && item.name.includes('飲み物')) {
+        updateDrinkSelectors(item, counts[id]);
+      }
+
+      updateTotal();
+    }
+
+    function updateDrinkSelectors(item, count) {
+      const container = document.getElementById(`${item.id}-drink-container`);
+      if (!container) return;
+
+      if (count === 0) {
+        container.style.display = 'none';
+        container.innerHTML = '';
+        return;
+      }
+
+      container.style.display = 'block';
+
+      const currentSelects = container.querySelectorAll('.drink-select');
+      const existingValues = Array.from(currentSelects).map(s => s.value);
+
+      let html = '';
+      for (let i = 0; i < count; i++) {
+        const val = existingValues[i] || '';
+        html += `
+          <div class="drink-select-row">
+            <span>飲み物 ${count > 1 ? (i + 1) + 'つ目' : ''}:</span>
+            <select class="drink-select" id="${item.id}-drink-${i}">
+              <option value="">味を選択してください</option>
+              ${drinkOptions.map(d => `<option value="${d}" ${val === d ? 'selected' : ''}>${d}</option>`).join('')}
+            </select>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function updateTotal() {
+      let total = 0;
+      const allItems = [...menuData.single, ...menuData.setA, ...menuData.setB];
+      allItems.forEach(item => {
+        total += counts[item.id] * item.price;
+      });
+      document.getElementById('total').textContent = total.toLocaleString();
+    }
+
+    function resetAll() {
+      document.getElementById('customer-name').value = '';
+      for (let key in counts) {
+        counts[key] = 0;
+        const el = document.getElementById(`${key}-count`);
+        if (el) el.textContent = '0';
+
+        const drinkContainer = document.getElementById(`${key}-drink-container`);
+        if (drinkContainer) {
+          drinkContainer.style.display = 'none';
+          drinkContainer.innerHTML = '';
+        }
+      }
+      updateTotal();
+    }
+
+    function showConfirmation() {
+      const customerName = document.getElementById('customer-name').value.trim();
+
+      if (!customerName) {
+        alert('注文者名を入力してください。');
+        return;
+      }
+
+      let total = 0;
+      let summaryHtml = '';
+      let textSummaryList = [];
+      const allItems = [...menuData.single, ...menuData.setA, ...menuData.setB];
+      let drinkValidationError = false;
+      let selectedItemCount = 0;
+
+      allItems.forEach(item => {
+        const count = counts[item.id];
+        if (count > 0) {
+          selectedItemCount += count;
+          const subtotal = count * item.price;
+          total += subtotal;
+
+          let drinkText = '';
+          let textDrink = '';
+          if (item.name.includes('飲み物')) {
+            const selectedDrinks = [];
+            for (let i = 0; i < count; i++) {
+              const selectEl = document.getElementById(`${item.id}-drink-${i}`);
+              if (selectEl && selectEl.value) {
+                selectedDrinks.push(selectEl.value);
+              } else {
+                drinkValidationError = true;
+              }
+            }
+            if (selectedDrinks.length > 0) {
+              drinkText = `<div style="font-size:0.8rem; color:#d63384; margin-top:2px; font-weight:bold;">↳ 味: ${selectedDrinks.join(', ')}</div>`;
+              textDrink = `\n   └ 味: ${selectedDrinks.join(', ')}`;
+            }
+          }
+
+          summaryHtml += `
+            <div style="margin-bottom: 8px;">
+              <div class="summary-item">
+                <span>${item.name} × ${count}</span>
+                <span>¥${subtotal.toLocaleString()}</span>
+              </div>
+              ${drinkText}
+            </div>
+          `;
+
+          textSummaryList.push(`• ${item.name} × ${count} (¥${subtotal.toLocaleString()})${textDrink}`);
+        }
+      });
+
+      if (selectedItemCount === 0) {
+        alert('商品を選択してください。');
+        return;
+      }
+
+      if (drinkValidationError) {
+        alert('選択した商品の飲み物の味をすべて選択してください。');
+        return;
+      }
+
+      currentOrderData = { 
+        customerName, 
+        summaryHtml, 
+        textSummary: textSummaryList.join('\n'), 
+        total 
+      };
+
+      document.getElementById('confirm-customer-name').textContent = `注文者: ${customerName} 様`;
+      document.getElementById('confirm-summary').innerHTML = summaryHtml;
+      document.getElementById('confirm-total').textContent = total.toLocaleString();
+
+      document.getElementById('confirm-modal').style.display = 'flex';
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-modal').style.display = 'none';
+    }
+
+    function finalSubmit() {
+      if (!currentOrderData) return;
+
+      // Discord Webhook送信
+      if (DISCORD_WEBHOOK_URL) {
+        const payload = {
+          content: "🔔 **新しい注文が入りました！**",
+          embeds: [
+            {
+              title: "🚚 注文情報",
+              color: 14037892,
+              fields: [
+                { name: "注文者名", value: `${currentOrderData.customerName} 様`, inline: true },
+                { name: "合計金額", value: `¥${currentOrderData.total.toLocaleString()}`, inline: true },
+                { name: "注文内容", value: currentOrderData.textSummary || "なし" }
+              ],
+              footer: { text: "硬式野球部島 注文システム" },
+              timestamp: new Date().toISOString()
+            }
+          ]
+        };
+
+        fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(err => console.error('Discord送信エラー:', err));
+      }
+
+      document.getElementById('confirm-modal').style.display = 'none';
+
+      document.getElementById('modal-customer-name').textContent = `注文者: ${currentOrderData.customerName} 様`;
+      document.getElementById('modal-summary').innerHTML = currentOrderData.summaryHtml;
+      document.getElementById('modal-total').textContent = currentOrderData.total.toLocaleString();
+
+      document.getElementById('order-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('order-modal').style.display = 'none';
+
+      if (currentOrderData) {
+        const container = document.getElementById('past-orders-container');
+        const title = document.getElementById('past-orders-title');
+        title.style.display = 'block';
+
+        const orderCard = document.createElement('div');
+        orderCard.className = 'past-order-card';
+        orderCard.innerHTML = `
+          <div class="last-order-header">
+            <span>🚚 お届け用注文情報</span>
+          </div>
+          <div class="delivery-time-note" style="text-align: left;">
+            ※注文完了から1〜5分以内にお届けに参ります。
+          </div>
+          <div class="warning-note" style="text-align: left; margin-bottom: 8px;">
+            ※お届けにいって5分経過した場合は注文を取り消します。
+          </div>
+          <div class="customer-display" style="border-bottom: none; padding-bottom: 0;">
+            <div>注文者: ${currentOrderData.customerName} 様</div>
+          </div>
+          <div class="summary-list">${currentOrderData.summaryHtml}</div>
+          <div style="font-size: 1.1rem; font-weight: bold; text-align: right;">
+            合計: ¥${currentOrderData.total.toLocaleString()}
+          </div>
+          <button class="btn-clear-last" onclick="removePastOrder(this)">配達完了（この注文を消す）</button>
+        `;
+
+        container.prepend(orderCard);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      resetAll();
+    }
+
+    function removePastOrder(buttonElement) {
+      if (confirm('本当に完了しましたか？')) {
+        const card = buttonElement.parentElement;
+        card.remove();
+
+        const container = document.getElementById('past-orders-container');
+        if (container.children.length === 0) {
+          document.getElementById('past-orders-title').style.display = 'none';
+        }
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
